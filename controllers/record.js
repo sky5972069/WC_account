@@ -39,7 +39,7 @@ recordRouter.post('/',(req,res)=>{
     name:req.body.name,
     date:req.body.date,
     price:req.body.price,
-    detail:req.body.detail|'',
+    detail:req.body.detail||'',
     tag:req.body.tag,
     userid:req.body.userid
   };
@@ -61,7 +61,7 @@ recordRouter.post('/:userid',(req,res)=>{
     name:req.body.name,
     date:req.body.date,
     price:req.body.price,
-    detail:req.body.detail|'',
+    detail:req.body.detail||'',
     tag:req.body.tag,
     userid:req.params.userid
   }
