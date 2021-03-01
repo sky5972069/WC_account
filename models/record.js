@@ -3,12 +3,17 @@ const tools = require('../utils/tools')
 const mysql = require('mysql')
 
 
-const saveRecordByUserid = (newRecord) => {
-  return(`insert into WC_Records (name, date, price, detail, tag, userid) values ('${newRecord.name}','${newRecord.date}',${newRecord.price},'${newRecord.detail}',${newRecord.tag},'${newRecord.userid}')`)
+const saveRecordByOpenid = (newRecord) => {
+  return(`insert into WC_Records (name, date, price, detail, tag, userid) values ('${newRecord.name}','${newRecord.date}',${newRecord.price},'${newRecord.detail}',${newRecord.tag},'${newRecord.openid}')`)
 }
 
-const getRecordsByUserid = (userid) => {
-  return (`select * from WC_Records where userid = '${userid}'`)
+
+const saveSuggestionByOpenid = (newSuggestion) => {
+  return(`insert into WC_Suggestions (userid, suggestion) values ('${newSuggestion.userid}','${newSuggestion.suggestion}')`)
+}
+
+const getRecordsByOpenid = (openid) => {
+  return (`select * from WC_Records where userid = '${openid}'`)
 }
 
 
@@ -17,7 +22,8 @@ const getAllRecords = () => {
 }
 
 module.exports = {
-  getRecordsByUserid,
-  saveRecordByUserid,
+  getRecordsByOpenid,
+  saveSuggestionByOpenid,
+  saveRecordByOpenid,
   getAllRecords
 }

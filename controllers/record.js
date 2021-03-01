@@ -3,71 +3,47 @@ const recordRouter = require('express').Router()
 const recordModel = require('../models/record')
 const mysql = require('mysql')
 const config = require('../utils/config')
+const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
-recordRouter.get('/', (req,res) => {
+  
+  
+recordRouter.get('/:token',(req,res) => {
+  console.log(req.params.token)
+  const decodedToken = jwt.verify(req.params.token, config.TOKEN_SECRET)
+  console.log(decodedToken)
+
   let connection=mysql.createConnection(config.MYSQL_DB)
   connection.connect()
-  connection.query(recordModel.getAllRecords(), function(error,results,fields){
+  console.log('getconnected')
+    connection.query(recordModel.getRecordsByOpenid(decodedToken.openid),function(error,results,fields){
       if (error){
         console.log(error)
         throw error
       }
-      console.log(results)
-      res.json(results)
-    })
-  connection.end()
-})
-  
-  
-recordRouter.get('/:userid',(req,res) => {
-  let connection=mysql.createConnection(config.MYSQL_DB)
-  connection.connect()
-    connection.query(recordModel.getRecordsByUserid(req.params.userid),function(error,results,fields){
-      if (error){
-        console.log(error)
-        throw error
-      }
+      console.log('success')
       res.json(results)
     })
   connection.end()
 })
 
-recordRouter.post('/',(req,res)=>{
-  console.log(req.body)
-  let newRecord = {
-    name:req.body.name,
-    date:req.body.date,
-    price:req.body.price,
-    detail:req.body.detail||'',
-    tag:req.body.tag,
-    userid:req.body.userid
-  };
-  let connection=mysql.createConnection(config.MYSQL_DB)
-  connection.connect();
-  connection.query(recordModel.saveRecordByUserid(newRecord),function(error,results,fields){
-    if(error) {
-      console.log(error)
-      throw console.error
-    }
-    res.json(results)
-  })
-  connection.end()
-})
 
 
-recordRouter.post('/:userid',(req,res)=>{
+recordRouter.post('/:token',(req,res)=>{
+  console.log(req.params.token)
+  const decodedToken = jwt.verify(req.params.token, config.TOKEN_SECRET)
+  console.log(decodedToken)
   newRecord = {
     name:req.body.name,
     date:req.body.date,
     price:req.body.price,
     detail:req.body.detail||'',
     tag:req.body.tag,
-    userid:req.params.userid
+    openid:decodedToken.openid
   }
   let connection=mysql.createConnection(config.MYSQL_DB)
   connection.connect();
-  connection.query(recordModel.saveRecordByUserid(newRecord),function(error,results,fields){
+  connection.query(recordModel.saveRecordByOpenid(newRecord),function(error,results,fields){
     if(error) {
       console.log(error)
       throw console.error
@@ -76,5 +52,28 @@ recordRouter.post('/:userid',(req,res)=>{
   })
   connection.end()
 })
+
+recordRouter.post('/suggestion/:token',(req,res)=>{
+  console.log(req.params.token)
+  console.log(req.body.suggestion)
+  const decodedToken = jwt.verify(req.params.token, config.TOKEN_SECRET)
+  console.log(decodedToken)
+  newSuggestion = {
+    userid:decodedToken.openid,
+    suggestion: req.body.suggestion
+  }
+  let connection=mysql.createConnection(config.MYSQL_DB)
+  connection.connect();
+  connection.query(recordModel.saveSuggestionByOpenid(newSuggestion),function(error,results,fields){
+    if(error) {
+      console.log(error)
+      throw console.error
+    }
+    res.json(results)
+  })
+  connection.end()
+})
+
+
 
 module.exports = recordRouter
