@@ -7,6 +7,9 @@ const saveRecordByOpenid = (newRecord) => {
   return(`insert into WC_Records (name, date, price, detail, tag, userid) values ('${newRecord.name}','${newRecord.date}',${newRecord.price},'${newRecord.detail}',${newRecord.tag},'${newRecord.openid}')`)
 }
 
+const removeRecordByOpenid = (recordId) => {
+  return(`delete from WC_Records where id ='${recordId}'`)
+}
 
 const saveSuggestionByOpenid = (newSuggestion) => {
   return(`insert into WC_Suggestions (userid, suggestion) values ('${newSuggestion.userid}','${newSuggestion.suggestion}')`)
@@ -25,5 +28,6 @@ module.exports = {
   getRecordsByOpenid,
   saveSuggestionByOpenid,
   saveRecordByOpenid,
-  getAllRecords
+  getAllRecords,
+  removeRecordByOpenid
 }

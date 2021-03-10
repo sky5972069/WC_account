@@ -48,6 +48,26 @@ recordRouter.post('/:token',(req,res)=>{
       console.log(error)
       throw console.error
     }
+    console.log('res:', results)
+    res.json(results)
+  })
+  connection.end()
+})
+
+
+recordRouter.post('/delete/:token',(req,res)=>{
+  console.log(req.params.token)
+  const decodedToken = jwt.verify(req.params.token, config.TOKEN_SECRET)
+  console.log(decodedToken)
+  let connection=mysql.createConnection(config.MYSQL_DB)
+  connection.connect();
+  console.log('deleteid:', req.body.deleteId)
+  connection.query(recordModel.removeRecordByOpenid(req.body.deleteId),function(error,results,fields){
+    if(error) {
+      console.log(error)
+      throw console.error
+    }
+    console.log('res:', results)
     res.json(results)
   })
   connection.end()
