@@ -62,10 +62,10 @@ recordRouter.post('/delete/:token',(req,res)=>{
   let connection=mysql.createConnection(config.MYSQL_DB)
   connection.connect();
   console.log('deleteid:', req.body.deleteId)
-  connection.query(recordModel.removeRecordByOpenid(req.body.deleteId),function(error,results,fields){
+  connection.query(recordModel.removeRecordByOpenid(req.body.deleteId, decodedToken.openid),function(error,results,fields){
     if(error) {
       console.log(error)
-      throw console.error
+      throw error
     }
     console.log('res:', results)
     res.json(results)

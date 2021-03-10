@@ -7,8 +7,8 @@ const saveRecordByOpenid = (newRecord) => {
   return(`insert into WC_Records (name, date, price, detail, tag, userid) values ('${newRecord.name}','${newRecord.date}',${newRecord.price},'${newRecord.detail}',${newRecord.tag},'${newRecord.openid}')`)
 }
 
-const removeRecordByOpenid = (recordId) => {
-  return(`delete from WC_Records where id ='${recordId}'`)
+const removeRecordByOpenid = (recordId, openid) => {
+  return(`delete from WC_Records where id ='${recordId}' and userid = '${openid}'`)
 }
 
 const saveSuggestionByOpenid = (newSuggestion) => {
